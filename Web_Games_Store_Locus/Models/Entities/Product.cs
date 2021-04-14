@@ -12,6 +12,6 @@ namespace Web_Games_Store_Locus.Models.Entities
         public double Price { get; set; }
         public string Image { get; set; }
         public Category Category { get; set; }
-        public Tag Tag { get; set; }
+        public ICollection<Tag> Tags { get; set; }
     }
 }

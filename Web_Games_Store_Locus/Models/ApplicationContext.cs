@@ -19,15 +19,21 @@ namespace Web_Games_Store_Locus.Models
                 .WithOne(el => el.User)
                 .HasForeignKey<UserInfo>(el => el.Id);
 
-            builder.Entity<User>()
-                .HasOne(el => el.UserInfo)
-                .WithOne(el => el.User)
-                .HasForeignKey<UserInfo>(el => el.Id);
+            builder.Entity<Category>()
+                .HasMany(el => el.Products)
+                .WithOne(el => el.Category)
+                .HasForeignKey(el => el.Id);
+
+            builder.Entity<Tag>()
+                .HasOne(el => el.Product)
+                .WithMany(el => el.Tags)
+                .HasForeignKey(el => el.Id);
 
             base.OnModelCreating(builder);
         }
         public DbSet<UserInfo> UserInfos { get; set; }
         public DbSet<Category> Category { get; set; }
-        public DbSet<Category> Category { get; set; }
+        public DbSet<Product> Products { get; set; }
+        public DbSet<Tag> Tag { get; set; }
     }
 }
