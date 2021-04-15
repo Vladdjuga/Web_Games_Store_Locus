@@ -130,4 +130,10 @@ C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Humanizer.dll
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Microsoft.EntityFrameworkCore.Design.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.Internal.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Cryptography.KeyDerivation.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Core.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Microsoft.Extensions.Identity.Stores.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.MvcApplicationPartsAssemblyInfo.cache
