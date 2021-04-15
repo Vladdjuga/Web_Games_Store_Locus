@@ -9,6 +9,5 @@ namespace Web_Games_Store_Locus.Models.Dto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public ProductDto? Product { get; set; }
     }
 }

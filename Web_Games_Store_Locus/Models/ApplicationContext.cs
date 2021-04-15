@@ -25,15 +25,15 @@ namespace Web_Games_Store_Locus.Models
                 .HasForeignKey(el => el.Id);
 
             builder.Entity<Tag>()
-                .HasOne(el => el.Product)
+                .HasMany(el => el.Products)
                 .WithMany(el => el.Tags)
-                .HasForeignKey(el => el.Id);
+                .UsingEntity(j => j.ToTable("ProductsTags"));
 
             base.OnModelCreating(builder);
         }
         public DbSet<UserInfo> UserInfos { get; set; }
-        public DbSet<Category> Category { get; set; }
+        public DbSet<Category> Categories { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Tag> Tag { get; set; }
+        public DbSet<Tag> Tags { get; set; }
     }
 }
