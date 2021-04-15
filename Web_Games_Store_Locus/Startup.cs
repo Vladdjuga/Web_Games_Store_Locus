@@ -71,12 +71,13 @@ namespace Web_Games_Store_Locus
                     ClockSkew = TimeSpan.Zero
                 };
             });
-            //Helpers.SeedDataExtention.SeedData(services,,Configuration);
+            //
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors((res) => res.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -92,6 +93,7 @@ namespace Web_Games_Store_Locus
             {
                 endpoints.MapControllers();
             });
+            Helpers.SeedDataExtention.SeedData(app.ApplicationServices,env, Configuration);
         }
     }
 }

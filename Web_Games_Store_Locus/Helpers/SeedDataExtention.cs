@@ -60,15 +60,15 @@ namespace Web_Games_Store_Locus.Helpers
                 Email = email,
                 UserName = email
             };
-            var dasha = new User
+            var vlad = new User
             {
                 Email = "vladdjuga@gmail.com",
                 UserName = "vladdjuga@gmail.com"
             };
             var resultAdmin = userManager.CreateAsync(admin, "Qwerty1-").Result;
             resultAdmin = userManager.AddToRoleAsync(admin, "Admin").Result;
-            var resultDasha = userManager.CreateAsync(dasha, "Qwerty1-").Result;
-            resultDasha = userManager.AddToRoleAsync(dasha, "Guest").Result;
+            var resultVlad = userManager.CreateAsync(vlad, "Qwerty1-").Result;
+            resultVlad = userManager.AddToRoleAsync(vlad, "User").Result;
         }
     }
 }

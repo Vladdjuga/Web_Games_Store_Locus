@@ -12,6 +12,5 @@ namespace Web_Games_Store_Locus.Models.Dto
         public double Price { get; set; }
         public string Image { get; set; }
         public CategoryDto Category { get; set; }
-        public TagDto Tag { get; set; }
     }
 }
