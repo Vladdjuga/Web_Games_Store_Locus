@@ -68,7 +68,6 @@ namespace Web_Games_Store_Locus
                     ValidateIssuer = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    // set ClockSkew is zero
                     ClockSkew = TimeSpan.Zero
                 };
             });
