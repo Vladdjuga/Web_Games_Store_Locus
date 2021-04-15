@@ -71,6 +71,7 @@ namespace Web_Games_Store_Locus
                     ClockSkew = TimeSpan.Zero
                 };
             });
+            //Helpers.SeedDataExtention.SeedData(services,,Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

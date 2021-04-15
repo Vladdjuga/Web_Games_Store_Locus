@@ -29,7 +29,8 @@ namespace Web_Games_Store_Locus.Controllers
                 Name = el.Name,
                 Id = el.Id,
                 Price = el.Price,
-                Image = el.Image
+                Image = el.Image,
+                Category=new CategoryDto() {Id=el.Category.Id, Name=el.Category.Name}
             }).ToList();
             var res = new ResultCollectionDto<ProductDto>()
             {
@@ -48,7 +49,8 @@ namespace Web_Games_Store_Locus.Controllers
                 {
                     Name = model.Name,
                     Price = model.Price,
-                    Image = model.Image
+                    Image = model.Image,
+                    Category=_context.Categories.Find(model.Category.Id)
                 };
                 _context.Products.Add(product);
                 _context.SaveChanges();

@@ -22,9 +22,9 @@ namespace Web_Games_Store_Locus.Controllers
         }
 
         [HttpGet]
-        public ResultCollectionDto<CategoryDto> GetCategorys()
+        public ResultCollectionDto<CategoryDto> GetCategories()
         {
-            var selected = _context.Category.Select(el => new CategoryDto()
+            var selected = _context.Categories.Select(el => new CategoryDto()
             {
                 Name = el.Name,
                 Id = el.Id
@@ -46,7 +46,7 @@ namespace Web_Games_Store_Locus.Controllers
                 {
                     Name = model.Name
                 };
-                _context.Category.Add(category);
+                _context.Categories.Add(category);
                 _context.SaveChanges();
                 var res = new ResultDto()
                 {
@@ -69,7 +69,7 @@ namespace Web_Games_Store_Locus.Controllers
         [Route("prepare/{id}")]
         public ResultCollectionDto<CategoryDto> PrepareToUpdate([FromRoute] int id)
         {
-            var category = _context.Category.Where(el => el.Id == id).Select(c => new CategoryDto()
+            var category = _context.Categories.Where(el => el.Id == id).Select(c => new CategoryDto()
             {
                 Id = c.Id,
                 Name = c.Name
@@ -81,14 +81,14 @@ namespace Web_Games_Store_Locus.Controllers
             };
         }
         [HttpPut]
-        public ResultDto EditProduct([FromBody] CategoryDto model)
+        public ResultDto EditCategory([FromBody] CategoryDto model)
         {
             try
             {
-                var category = _context.Category.Find(model.Id);
+                var category = _context.Categories.Find(model.Id);
                 category.Name = model.Name;
 
-                _context.Products.Add(category);
+                _context.Categories.Add(category);
                 _context.SaveChanges();
                 var res = new ResultDto()
                 {

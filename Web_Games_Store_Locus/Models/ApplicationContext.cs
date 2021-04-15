@@ -14,6 +14,15 @@ namespace Web_Games_Store_Locus.Models
         { }
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Product>()
+                .HasKey(el => el.Id);
+            builder.Entity<Tag>()
+                .HasKey(el => el.Id);
+            builder.Entity<Category>()
+                .HasKey(el => el.Id);
+            builder.Entity<UserInfo>()
+                .HasKey(el => el.Id);
+
             builder.Entity<User>()
                 .HasOne(el => el.UserInfo)
                 .WithOne(el => el.User)
