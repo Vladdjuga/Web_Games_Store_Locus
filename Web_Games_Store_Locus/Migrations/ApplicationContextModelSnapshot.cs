@@ -183,6 +183,11 @@ namespace Web_Games_Store_Locus.Migrations
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("CategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("Image")
@@ -195,6 +200,8 @@ namespace Web_Games_Store_Locus.Migrations
                         .HasColumnType("float");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("Products");
                 });
@@ -365,9 +372,7 @@ namespace Web_Games_Store_Locus.Migrations
                 {
                     b.HasOne("Web_Games_Store_Locus.Models.Entities.Category", "Category")
                         .WithMany("Products")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
                 });

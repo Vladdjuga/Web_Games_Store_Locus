@@ -93,7 +93,7 @@ namespace Web_Games_Store_Locus
             {
                 endpoints.MapControllers();
             });
-            Helpers.SeedDataExtention.SeedData(app.ApplicationServices,env, Configuration);
+            //Helpers.SeedDataExtention.SeedData(app.ApplicationServices,env, Configuration);
         }
     }
 }

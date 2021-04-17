@@ -28,11 +28,6 @@ namespace Web_Games_Store_Locus.Models
                 .WithOne(el => el.User)
                 .HasForeignKey<UserInfo>(el => el.Id);
 
-            builder.Entity<Category>()
-                .HasMany(el => el.Products)
-                .WithOne(el => el.Category)
-                .HasForeignKey(el => el.Id);
-
             builder.Entity<Tag>()
                 .HasMany(el => el.Products)
                 .WithMany(el => el.Tags)
