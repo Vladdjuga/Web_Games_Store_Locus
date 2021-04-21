@@ -87,6 +87,8 @@ namespace Web_Games_Store_Locus
 
             app.UseRouting();
 
+            app.UseStaticFiles();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

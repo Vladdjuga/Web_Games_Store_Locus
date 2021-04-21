@@ -96,8 +96,8 @@ namespace Web_Games_Store_Locus.Controllers
                 product.Name = model.Name;
                 product.Price = model.Price;
                 product.Image = model.Image;
+                product.Category = _context.Categories.Find(model.Category.Id);
 
-                _context.Products.Add(product);
                 _context.SaveChanges();
                 var res = new ResultDto()
                 {
