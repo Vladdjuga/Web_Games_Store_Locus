@@ -1,20 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\vanya\\OneDrive\\Документы\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\Web_Games_Store_Locus.csproj": {}
+    "C:\\Users\\ernendo.itstep\\Documents\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\Web_Games_Store_Locus.csproj": {}
   },
   "projects": {
-    "C:\\Users\\vanya\\OneDrive\\Документы\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\Web_Games_Store_Locus.csproj": {
+    "C:\\Users\\ernendo.itstep\\Documents\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\Web_Games_Store_Locus.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\vanya\\OneDrive\\Документы\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\Web_Games_Store_Locus.csproj",
+        "projectUniqueName": "C:\\Users\\ernendo.itstep\\Documents\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\Web_Games_Store_Locus.csproj",
         "projectName": "Web_Games_Store_Locus",
-        "projectPath": "C:\\Users\\vanya\\OneDrive\\Документы\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\Web_Games_Store_Locus.csproj",
-        "packagesPath": "C:\\Users\\vanya\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\vanya\\OneDrive\\Документы\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\obj\\",
+        "projectPath": "C:\\Users\\ernendo.itstep\\Documents\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\Web_Games_Store_Locus.csproj",
+        "packagesPath": "C:\\Users\\ernendo.itstep\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\ernendo.itstep\\Documents\\GitHub\\Web_Games_Store_Locus\\Web_Games_Store_Locus\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
         "configFilePaths": [
-          "C:\\Users\\vanya\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\ernendo.itstep\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -26,6 +29,7 @@
         },
         "frameworks": {
           "netcoreapp3.1": {
+            "targetAlias": "netcoreapp3.1",
             "projectReferences": {}
           }
         },
@@ -37,6 +41,7 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.JwtBearer": {
               "target": "Package",
@@ -87,7 +92,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "c:\\program files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -9,7 +9,11 @@ namespace Web_Games_Store_Locus.Models.Entities
     {
         public string Id { get; set; }
         public string Username { get; set; }
+        public string Alias { get; set; }
+        public DateTime Birth { get; set; }
+        public string Address { get; set; }
         public string Image { get; set; }
+        public bool IsBanned { get; set; }
         public User User { get; set; }
 
     }

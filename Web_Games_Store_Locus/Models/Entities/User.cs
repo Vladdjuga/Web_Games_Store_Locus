@@ -9,5 +9,6 @@ namespace Web_Games_Store_Locus.Models.Entities
     public class User : IdentityUser
     {
         public UserInfo UserInfo { get; set; }
+        public ICollection<User> Friends { get; set; }
     }
 }
