@@ -37,7 +37,7 @@ namespace Web_Games_Store_Locus.Controllers
         }
 
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         public async Task<ResultDto> Register([FromBody] RegisterDto model)
         {
             User user = new User()
@@ -66,18 +66,19 @@ namespace Web_Games_Store_Locus.Controllers
 
         }
         [HttpPost("login")]
-        public async Task<ResultDto> Login(LoginDto model)
+        public async Task<ResultLoginDto> Login([FromBody] LoginDto model)
         {
-            var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, false, false);
+            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
             if (!result.Succeeded)
             {
-                return new ResultDto
+                return new ResultLoginDto
                 {
-                    IsSuccess = false
+                    IsSuccess = false,
+                    Message="Incorrect password or email"
                 };
             }
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
+            var user = await _userManager.FindByNameAsync(model.Username);
             await _signInManager.SignInAsync(user, isPersistent: false);
 
             return new ResultLoginDto
