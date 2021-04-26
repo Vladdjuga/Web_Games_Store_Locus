@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Web_Games_Store_Locus.Models;
 using Web_Games_Store_Locus.Models.Dto;
 using Web_Games_Store_Locus.Models.Entities;
 using Web_Games_Store_Locus.Models.Results;
@@ -16,13 +18,38 @@ namespace Web_Games_Store_Locus.Controllers
     [ApiController]
     public class FriendController : ControllerBase
     {
-        private UserManager<User> _userManager;
-        public FriendController(UserManager<User> userManager)
+        private readonly UserManager<User> _userManager;
+        private readonly ApplicationContext _context;
+        public FriendController(UserManager<User> userManager,
+            ApplicationContext context)
         {
             _userManager = userManager;
+            _context = context;
         }
         [HttpPost("invite")]
-        public async Task<ResultDto> Invite([])
+        public async Task<ResultDto> Invite([FromBody] InviteDto inviteDto)
+        {
+            try
+            {
+                var userFriend1 = await _userManager.FindByNameAsync(inviteDto.Friend1.Username);
+                var userFriend2 = await _userManager.FindByNameAsync(inviteDto.Friend2.Username);
+                _context.Users.First(el=>el.UserName==userFriend1.UserName).UserInfo.Friends.Add(userFriend2);
+                _context.SaveChanges();
+                return new ResultDto()
+                {
+                    IsSuccess = true,
+                    Message = "Successfuly added"
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ResultDto()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
 
 
         [HttpGet("friends/{token}")]
@@ -40,13 +67,12 @@ namespace Web_Games_Store_Locus.Controllers
                 var result = new ResultCollectionDto<FriendDto>()
                 {
                     IsSuccess = true,
-                    Data = user.Friends.Select(el => new FriendDto()
+                    Data = user.UserInfo.Friends.Select(el => new FriendDto()
                     {
                         Alias = el.UserInfo.Alias,
                         Birth = el.UserInfo.Birth,
                         Image = el.UserInfo.Image,
-                        Username = el.UserName,
-                        Id = el.Id
+                        Username = el.UserName
                     }).ToList(),
                     Message = "success"
                 };

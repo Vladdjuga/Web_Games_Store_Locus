@@ -269,7 +269,7 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserId")
+                    b.Property<string>("UserInfoId1")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("UserName")
@@ -286,7 +286,7 @@ namespace Web_Games_Store_Locus.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserInfoId1");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -396,9 +396,9 @@ namespace Web_Games_Store_Locus.Migrations
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.User", b =>
                 {
-                    b.HasOne("Web_Games_Store_Locus.Models.Entities.User", null)
+                    b.HasOne("Web_Games_Store_Locus.Models.Entities.UserInfo", null)
                         .WithMany("Friends")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserInfoId1");
                 });
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.UserInfo", b =>
@@ -419,9 +419,12 @@ namespace Web_Games_Store_Locus.Migrations
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.User", b =>
                 {
-                    b.Navigation("Friends");
-
                     b.Navigation("UserInfo");
+                });
+
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.UserInfo", b =>
+                {
+                    b.Navigation("Friends");
                 });
 #pragma warning restore 612, 618
         }

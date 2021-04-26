@@ -10,8 +10,8 @@ using Web_Games_Store_Locus.Models;
 namespace Web_Games_Store_Locus.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210419140136_test1")]
-    partial class test1
+    [Migration("20210426134524_test")]
+    partial class test
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -271,6 +271,9 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
+                    b.Property<string>("UserInfoId1")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -285,6 +288,8 @@ namespace Web_Games_Store_Locus.Migrations
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
+                    b.HasIndex("UserInfoId1");
+
                     b.ToTable("AspNetUsers");
                 });
 
@@ -293,8 +298,20 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Alias")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Birth")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsBanned")
+                        .HasColumnType("bit");
 
                     b.Property<string>("Username")
                         .HasColumnType("nvarchar(max)");
@@ -379,6 +396,13 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Navigation("Category");
                 });
 
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.User", b =>
+                {
+                    b.HasOne("Web_Games_Store_Locus.Models.Entities.UserInfo", null)
+                        .WithMany("Friends")
+                        .HasForeignKey("UserInfoId1");
+                });
+
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.UserInfo", b =>
                 {
                     b.HasOne("Web_Games_Store_Locus.Models.Entities.User", "User")
@@ -398,6 +422,11 @@ namespace Web_Games_Store_Locus.Migrations
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.User", b =>
                 {
                     b.Navigation("UserInfo");
+                });
+
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.UserInfo", b =>
+                {
+                    b.Navigation("Friends");
                 });
 #pragma warning restore 612, 618
         }

@@ -37,10 +37,10 @@ namespace Web_Games_Store_Locus.Helpers
                 var manager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
                 var managerRole = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
-                SeedUsers(manager, managerRole);
+                SeedUsers(manager, managerRole,env, context);
             }
         }
-        private static void SeedUsers(UserManager<User> userManager, RoleManager<IdentityRole> roleManager)
+        private static void SeedUsers(UserManager<User> userManager, RoleManager<IdentityRole> roleManager, IWebHostEnvironment env,ApplicationContext context)
         {
             var roleName = "Admin";
             if (roleManager.FindByNameAsync(roleName).Result == null)
@@ -59,16 +59,39 @@ namespace Web_Games_Store_Locus.Helpers
             {
                 Email = email,
                 UserName = email
+            };    
+            var resultAdmin = userManager.CreateAsync(admin, "Qwerty1-").Result;
+            resultAdmin = userManager.AddToRoleAsync(admin, "Admin").Result;
+            var adminInfo = new UserInfo()
+            {
+                Image = env.WebRootPath + "/Images/UserIcons/default-user-image.png",
+                Address = "",
+                Alias = "admin",
+                Birth = DateTime.Today,
+                IsBanned = false,
+                Username = "admin@gmail.com",
+                Id = admin.Id
             };
             var vlad = new User
             {
                 Email = "vladdjuga@gmail.com",
                 UserName = "vladdjuga@gmail.com"
             };
-            var resultAdmin = userManager.CreateAsync(admin, "Qwerty1-").Result;
-            resultAdmin = userManager.AddToRoleAsync(admin, "Admin").Result;
             var resultVlad = userManager.CreateAsync(vlad, "Qwerty1-").Result;
             resultVlad = userManager.AddToRoleAsync(vlad, "User").Result;
+            var vladInfo = new UserInfo()
+            {
+                Image = env.WebRootPath + "/Images/UserIcons/default-user-image.png",
+                Address = "",
+                Alias = "vlad",
+                Birth = DateTime.Today,
+                IsBanned = false,
+                Username = "vladdjuga@gmail.com",
+                Id = vlad.Id
+            };
+            context.UserInfos.Add(adminInfo);
+            context.UserInfos.Add(vladInfo);
+            context.SaveChanges();
         }
     }
 }

@@ -50,6 +50,8 @@ namespace Web_Games_Store_Locus
                 options.Password.RequireUppercase = true;
             });
 
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
             services.AddTransient<IJwtTokenService, JwtTokenService>();
 
             var signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration.GetValue<string>("SecretPhrase")));
@@ -88,6 +90,8 @@ namespace Web_Games_Store_Locus
             app.UseRouting();
 
             app.UseStaticFiles();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
