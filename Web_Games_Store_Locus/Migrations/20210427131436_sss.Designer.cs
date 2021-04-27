@@ -10,8 +10,8 @@ using Web_Games_Store_Locus.Models;
 namespace Web_Games_Store_Locus.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210426134524_test")]
-    partial class test
+    [Migration("20210427131436_sss")]
+    partial class sss
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Web_Games_Store_Locus.Migrations
 {
-    public partial class test : Migration
+    public partial class sss : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
