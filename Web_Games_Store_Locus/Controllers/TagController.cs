@@ -67,21 +67,6 @@ namespace Web_Games_Store_Locus.Controllers
                 return err;
             }
         }
-        [HttpGet]
-        [Route("prepare/{id}")]
-        public ResultCollectionDto<TagDto> PrepareToUpdate([FromRoute]int id)
-        {
-            var category = _context.Products.Where(el => el.Id == id).Select(c => new TagDto()
-            {
-                Id = c.Id,
-                Name = c.Name
-            }).ToList();
-            return new ResultCollectionDto<TagDto>()
-            {
-                IsSuccess = true,
-                Data = category
-            };
-        }
         [HttpPut]
         public ResultDto EditTag([FromBody] TagDto model)
         {
@@ -108,6 +93,19 @@ namespace Web_Games_Store_Locus.Controllers
                 };
                 return err;
             }
+        }
+        [HttpGet]
+        [Route("remove/{id}")]
+        public ResultDto Remove([FromRoute] int id)
+        {
+            var obj = _context.Tags.Find(id);
+            _context.Tags.Remove(obj);
+            _context.SaveChanges();
+            return new ResultDto()
+            {
+                IsSuccess = true,
+                Message = "Removed succesfuly"
+            };
         }
     }
 }

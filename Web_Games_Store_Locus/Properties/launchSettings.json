@@ -12,7 +12,7 @@
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "api/Product",
+      "launchUrl": "api/Category",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
@@ -20,7 +20,7 @@
     "Web_Games_Store_Locus": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/Product",
+      "launchUrl": "api/Category",
       "applicationUrl": "https://localhost:5001;http://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"

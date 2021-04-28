@@ -109,5 +109,18 @@ namespace Web_Games_Store_Locus.Controllers
                 return err;
             }
         }
+        [HttpGet]
+        [Route("remove/{id}")]
+        public ResultDto Remove([FromRoute] int id)
+        {
+            var obj = _context.Categories.Find(id);
+            _context.Categories.Remove(obj);
+            _context.SaveChanges();
+            return new ResultDto()
+            {
+                IsSuccess = true,
+                Message="Removed succesfuly"
+            };
+        }
     }
 }
