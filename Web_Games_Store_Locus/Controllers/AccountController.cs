@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Web_Games_Store_Locus.Helpers;
 using Web_Games_Store_Locus.Models;
 using Web_Games_Store_Locus.Models.Dto.Users;
 using Web_Games_Store_Locus.Models.Entities;
@@ -107,18 +109,18 @@ namespace Web_Games_Store_Locus.Controllers
                 if (saveImage != null)
                 {
                     saveImage.Save(path, ImageFormat.Jpeg);
-                    var user = _context.UserAdditionalInfos.Find(id);
+                    var user = _context.UserInfos.Find(id);
                     if (user.Image != null && user.Image != "default.jpg")
                     {
                         System.IO.File.Delete(_environment.WebRootPath + @"\Images\" + user.Image);
                     }
-                    _context.UserAdditionalInfos.Find(id).Image = filename;
+                    _context.UserInfos.Find(id).Image = filename;
                     _context.SaveChanges();
                 }
             }
             return new ResultDto()
             {
-                IsSuccessful = true,
+                IsSuccess = true,
                 Message = "ok"
             };
         }
