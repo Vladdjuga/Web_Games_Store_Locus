@@ -128,7 +128,6 @@ C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.csprojAssemblyReference.cache
-C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.MvcApplicationPartsAssemblyInfo.cache
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.AssemblyInfoInputs.cache
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.AssemblyInfo.cs
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.RazorTargetAssemblyInfo.cache

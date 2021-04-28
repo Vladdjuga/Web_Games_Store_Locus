@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Web_Games_Store_Locus.Models;
@@ -23,6 +25,7 @@ namespace Web_Games_Store_Locus.Controllers
         private IWebHostEnvironment _environment;
         private SignInManager<User> _signInManager;
         private IJwtTokenService _jwtTokenService;
+
         public AccountController(UserManager<User> userManager,
             ApplicationContext context,
             IWebHostEnvironment environment,
@@ -87,6 +90,37 @@ namespace Web_Games_Store_Locus.Controllers
                 Token = _jwtTokenService.CreateToken(user)
             };
 
+        }
+        [HttpPost("uploadPhoto/{id}")]
+        public ResultDto UploadImage([FromRoute] string id, [FromForm(Name = "file")] IFormFile uploadedImage)
+        {
+            string filename = Guid.NewGuid().ToString() + ".jpg";
+            string path = _environment.WebRootPath + @"\Images";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            path = path + @"\" + filename;
+            using (Bitmap bmp = new Bitmap(uploadedImage.OpenReadStream()))
+            {
+                var saveImage = ImageWorker.CreateImage(bmp, 400, 365);
+                if (saveImage != null)
+                {
+                    saveImage.Save(path, ImageFormat.Jpeg);
+                    var user = _context.UserAdditionalInfos.Find(id);
+                    if (user.Image != null && user.Image != "default.jpg")
+                    {
+                        System.IO.File.Delete(_environment.WebRootPath + @"\Images\" + user.Image);
+                    }
+                    _context.UserAdditionalInfos.Find(id).Image = filename;
+                    _context.SaveChanges();
+                }
+            }
+            return new ResultDto()
+            {
+                IsSuccessful = true,
+                Message = "ok"
+            };
         }
     }
 }
