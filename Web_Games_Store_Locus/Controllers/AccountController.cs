@@ -5,7 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+<<<<<<< Updated upstream
 using System.Drawing.Imaging;
+=======
+>>>>>>> Stashed changes
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -109,18 +112,30 @@ namespace Web_Games_Store_Locus.Controllers
                 if (saveImage != null)
                 {
                     saveImage.Save(path, ImageFormat.Jpeg);
+<<<<<<< Updated upstream
                     var user = _context.UserInfos.Find(id);
+=======
+                    var user = _context.UserAdditionalInfos.Find(id);
+>>>>>>> Stashed changes
                     if (user.Image != null && user.Image != "default.jpg")
                     {
                         System.IO.File.Delete(_environment.WebRootPath + @"\Images\" + user.Image);
                     }
+<<<<<<< Updated upstream
                     _context.UserInfos.Find(id).Image = filename;
+=======
+                    _context.UserAdditionalInfos.Find(id).Image = filename;
+>>>>>>> Stashed changes
                     _context.SaveChanges();
                 }
             }
             return new ResultDto()
             {
+<<<<<<< Updated upstream
                 IsSuccess = true,
+=======
+                IsSuccessful = true,
+>>>>>>> Stashed changes
                 Message = "ok"
             };
         }
