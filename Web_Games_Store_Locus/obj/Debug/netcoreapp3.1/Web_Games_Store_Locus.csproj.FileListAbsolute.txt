@@ -136,3 +136,9 @@ C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\staticwebassets\Web_Games_Store_Locus.StaticWebAssets.xml
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.dll
 C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.pdb
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\Microsoft.Win32.SystemEvents.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\System.Drawing.Common.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll

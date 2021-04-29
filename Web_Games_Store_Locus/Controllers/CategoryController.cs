@@ -90,7 +90,6 @@ namespace Web_Games_Store_Locus.Controllers
                 var category = _context.Categories.Find(model.Id);
                 category.Name = model.Name;
 
-                _context.Categories.Add(category);
                 _context.SaveChanges();
                 var res = new ResultDto()
                 {

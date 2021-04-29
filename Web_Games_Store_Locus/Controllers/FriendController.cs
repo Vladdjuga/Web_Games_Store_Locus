@@ -57,7 +57,7 @@ namespace Web_Games_Store_Locus.Controllers
         {
             try
             {
-                var stream = "[encoded jwt]";
+                var stream = token;
                 var handler = new JwtSecurityTokenHandler();
                 var jsonToken = handler.ReadToken(stream);
                 var tokenS = jsonToken as JwtSecurityToken;

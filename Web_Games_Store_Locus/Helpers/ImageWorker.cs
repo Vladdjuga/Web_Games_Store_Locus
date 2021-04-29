@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-<<<<<<< Updated upstream
 using System.Drawing;
 using System.Drawing.Imaging;
-=======
->>>>>>> Stashed changes
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,7 +9,6 @@ namespace Web_Games_Store_Locus.Helpers
 {
     public class ImageWorker
     {
-<<<<<<< Updated upstream
         public static Bitmap CreateImage(Bitmap originalPic, int maxWidth, int maxHeight)
         {
             try
@@ -60,7 +56,5 @@ namespace Web_Games_Store_Locus.Helpers
                 return null;
             }
         }
-=======
->>>>>>> Stashed changes
     }
 }

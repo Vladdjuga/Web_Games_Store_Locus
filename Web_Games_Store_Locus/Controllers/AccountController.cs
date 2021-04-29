@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-<<<<<<< Updated upstream
 using System.Drawing.Imaging;
-=======
->>>>>>> Stashed changes
+using System.IdentityModel.Tokens.Jwt;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -96,11 +94,40 @@ namespace Web_Games_Store_Locus.Controllers
             };
 
         }
+        [HttpGet("profile/{token}")]
+        public async Task<ResultCollectionDto<ProfileDto>> Profile([FromRoute] string token)
+        {
+            var stream = token;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+            var jti = tokenS.Claims.First(claim => claim.Type == "email").Value;
+
+            var user = await _userManager.FindByEmailAsync(jti);
+            var userInfo=_context.UserInfos.Find(user.Id);
+            var profile = new ProfileDto()
+            {
+                Alias = userInfo.Alias,
+                Birth = userInfo.Birth,
+                Email = user.Email,
+                Image = userInfo.Image,
+                Username = userInfo.Username
+            };
+            return new ResultCollectionDto<ProfileDto>()
+            {
+                IsSuccess = true,
+                Message = $"{token} users profile returned",
+                Data = new List<ProfileDto>()
+                {
+                    profile
+                }
+            };
+        }
         [HttpPost("uploadPhoto/{id}")]
         public ResultDto UploadImage([FromRoute] string id, [FromForm(Name = "file")] IFormFile uploadedImage)
         {
             string filename = Guid.NewGuid().ToString() + ".jpg";
-            string path = _environment.WebRootPath + @"\Images";
+            string path = _environment.WebRootPath + @"\Images\UsersIcons";
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -112,30 +139,18 @@ namespace Web_Games_Store_Locus.Controllers
                 if (saveImage != null)
                 {
                     saveImage.Save(path, ImageFormat.Jpeg);
-<<<<<<< Updated upstream
                     var user = _context.UserInfos.Find(id);
-=======
-                    var user = _context.UserAdditionalInfos.Find(id);
->>>>>>> Stashed changes
-                    if (user.Image != null && user.Image != "default.jpg")
+                    if (user.Image != null && user.Image != "default-user-image.png")
                     {
-                        System.IO.File.Delete(_environment.WebRootPath + @"\Images\" + user.Image);
+                        System.IO.File.Delete(path + user.Image);
                     }
-<<<<<<< Updated upstream
                     _context.UserInfos.Find(id).Image = filename;
-=======
-                    _context.UserAdditionalInfos.Find(id).Image = filename;
->>>>>>> Stashed changes
                     _context.SaveChanges();
                 }
             }
             return new ResultDto()
             {
-<<<<<<< Updated upstream
                 IsSuccess = true,
-=======
-                IsSuccessful = true,
->>>>>>> Stashed changes
                 Message = "ok"
             };
         }

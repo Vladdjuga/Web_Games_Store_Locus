@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Web_Games_Store_Locus.Models.Dto.Users;
 using Web_Games_Store_Locus.Models.Entities;
 
 namespace Web_Games_Store_Locus.Models.Dto
@@ -11,6 +12,6 @@ namespace Web_Games_Store_Locus.Models.Dto
         public string Id { get; set; }
         public string Text { get; set; }
         public string Image { get; set; }
-        public UserInfo User { get; set; }
+        public ProfileDto User { get; set; }
     }
 }

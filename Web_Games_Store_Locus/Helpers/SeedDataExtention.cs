@@ -70,7 +70,7 @@ namespace Web_Games_Store_Locus.Helpers
                 Birth = DateTime.Today,
                 IsBanned = false,
                 Username = "admin@gmail.com",
-                Id = admin.Id
+                User = admin
             };
             var vlad = new User
             {
@@ -87,7 +87,7 @@ namespace Web_Games_Store_Locus.Helpers
                 Birth = DateTime.Today,
                 IsBanned = false,
                 Username = "vladdjuga@gmail.com",
-                Id = vlad.Id
+                User = vlad
             };
             context.UserInfos.Add(adminInfo);
             context.UserInfos.Add(vladInfo);

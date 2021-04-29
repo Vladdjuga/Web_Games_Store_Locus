@@ -10,6 +10,6 @@ namespace Web_Games_Store_Locus.Models.Dto
         public int Id { get; set; }
         public string User1 { get; set; }
         public string User2 { get; set; }
-        public ICollection<Message> Messages { get; set; }
+        public ICollection<MessageDto> Messages { get; set; }
     }
 }
