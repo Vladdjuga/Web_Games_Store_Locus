@@ -16,6 +16,7 @@ namespace Web_Games_Store_Locus.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class FriendController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
@@ -33,26 +34,31 @@ namespace Web_Games_Store_Locus.Controllers
             {
                 var userFriend1 = await _userManager.FindByNameAsync(inviteDto.Friend1.Username);
                 var userFriend2 = await _userManager.FindByNameAsync(inviteDto.Friend2.Username);
-                var userinfo1 = _context.UserInfos.First(el=>el.User== userFriend1);
-                var userinfo2 = _context.UserInfos.First(el=>el.User== userFriend2);
-                if (userinfo1.Friends == null)
+                if (inviteDto.Friend1.Username == inviteDto.Friend2.Username)
                 {
-                    userinfo1.Friends = new List<User>();
+                    return new ResultDto()
+                    {
+                        IsSuccess = true,
+                        Message = "That is you"
+                    };
                 }
-                if (userinfo2.Friends == null)
+                var userinfo1 = _context.UserInfos.First(el => el.User == userFriend1);
+                var userinfo2 = _context.UserInfos.First(el => el.User == userFriend2);
+                _context.Invites.Remove(_context.Invites.First(el => el.User1 == userinfo1.Username && el.User2 == userinfo2.Username));
+                var friend = new Friend()
                 {
-                    userinfo2.Friends = new List<User>();
-                }
-                userinfo1.Friends.Add(userFriend2);
-                userinfo2.Friends.Add(userFriend1);
+                    User1 = userinfo1.Username,
+                    User2 = userinfo2.Username
+                };
+                _context.Friends.Add(friend);
                 _context.SaveChanges();
                 return new ResultDto()
                 {
                     IsSuccess = true,
-                    Message = "Successfuly added"
+                    Message = "Friend added!"
                 };
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return new ResultDto()
                 {
@@ -61,25 +67,44 @@ namespace Web_Games_Store_Locus.Controllers
                 };
             }
         }
-        [HttpPost("inviteaccept")]
+        [HttpPost("invite")]
         public async Task<ResultDto> Invite([FromBody] InviteDto inviteDto)
         {
             try
             {
                 var userFriend1 = await _userManager.FindByNameAsync(inviteDto.Friend1.Username);
                 var userFriend2 = await _userManager.FindByNameAsync(inviteDto.Friend2.Username);
-                var invite = new Invite()
+                if(inviteDto.Friend1.Username == inviteDto.Friend2.Username)
                 {
-                    User1 = userFriend1.UserName,
-                    User2 = userFriend2.UserName
-                };
-                _context.Invites.Add(invite);
-                _context.SaveChanges();
-                return new ResultDto()
+                    return new ResultDto()
+                    {
+                        IsSuccess = true,
+                        Message = "That is you"
+                    };
+                }
+                if (!_context.Invites.Any(el => el.User2 == userFriend2.UserName))
                 {
-                    IsSuccess = true,
-                    Message = "Successfuly added"
-                };
+                    var invite = new Invite()
+                    {
+                        User1 = userFriend1.UserName,
+                        User2 = userFriend2.UserName
+                    };
+                    _context.Invites.Add(invite);
+                    _context.SaveChanges();
+                    return new ResultDto()
+                    {
+                        IsSuccess = true,
+                        Message = "Successfuly added"
+                    };
+                }
+                else
+                {
+                    return new ResultDto()
+                    {
+                        IsSuccess = false,
+                        Message = "That user already invited!"
+                    };
+                }
             }
             catch (Exception ex)
             {
@@ -102,21 +127,24 @@ namespace Web_Games_Store_Locus.Controllers
                 var jti = tokenS.Claims.First(claim => claim.Type == "email").Value;
 
                 var user = await _userManager.FindByEmailAsync(jti);
-                var userinfo = _context.UserInfos.First(el=>el.User==user);
-                var result = new ResultCollectionDto<InviteDto>()
+                var userinfo = _context.UserInfos.First(el => el.User == user);
+                var invites = _context.Invites.Where(el => el.User2 == user.UserName).ToList();
+                var list_of_friends = new List<FriendDto>();
+                foreach (var item in invites)
+                {
+                    var userinf_temp = _context.UserInfos.First(el => el.Username == item.User1);
+                    var temp = new FriendDto();
+
+                    temp.Alias = userinf_temp.Alias;
+                    temp.Username = userinf_temp.Username;
+                    temp.Image = userinf_temp.Image;
+                    temp.Birth = userinf_temp.Birth;
+                    list_of_friends.Add(temp);
+                }
+                var result = new ResultCollectionDto<FriendDto>()
                 {
                     IsSuccess = true,
-                    Data = _context.Invites.Where(el=>el.User1==user.UserName).Select(el => new InviteDto()
-                    {
-                        Friend1=new FriendDto()
-                        {
-                            Alias = userinfo.Alias,
-                            Birth = userinfo.Birth,
-                            Image = userinfo.Image,
-                            Username = user.UserName
-                        },
-                        Friend2 = Helpers.MakeFriendDto.Make(user,_context)
-                    }).ToList(),
+                    Data = list_of_friends,
                     Message = "success"
                 };
                 return result;
@@ -145,25 +173,75 @@ namespace Web_Games_Store_Locus.Controllers
 
                 var user = await _userManager.FindByEmailAsync(jti);
                 var userinfo = _context.UserInfos.First(el => el.User == user);
-                if (userinfo.Friends == null)
+                var friends_table = _context.Friends.Where(el => el.User1 == userinfo.Username || el.User2 == userinfo.Username).ToList();
+                var friends = new List<FriendDto>();
+                foreach (var item in friends_table)
                 {
-                    userinfo.Friends = new List<User>();
+                    var f1 = new UserInfo();
+                    if (item.User1 == userinfo.Username)
+                    {
+                        f1 = _context.UserInfos.First(el => el.Username == item.User2);
+                    }
+                    else
+                    {
+                        f1 = _context.UserInfos.First(el => el.Username == item.User1);
+                    }
+
+                    friends.Add(new FriendDto()
+                    {
+                        Alias = f1.Alias,
+                        Birth = f1.Birth,
+                        Image = f1.Image,
+                        Username = f1.Username
+                    });
                 }
                 var result = new ResultCollectionDto<FriendDto>()
                 {
                     IsSuccess = true,
-                    Data = userinfo.Friends.Select(el => new FriendDto()
-                    {
-                        Alias = el.UserInfo.Alias,
-                        Birth = el.UserInfo.Birth,
-                        Image = el.UserInfo.Image,
-                        Username = el.UserName
-                    }).ToList(),
+                    Data = friends,
                     Message = "success"
                 };
                 return result;
             }
-            catch(Exception ex)
+            catch (Exception ex)
+            {
+                return new ResultDto()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
+        [HttpGet("find-friends/{token}&{str}")]
+        public async Task<ResultDto> GetStringFriends([FromRoute]string token,[FromRoute] string str)
+        {
+            try
+            {
+                var stream = token;
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(stream);
+                var tokenS = jsonToken as JwtSecurityToken;
+                var jti = tokenS.Claims.First(claim => claim.Type == "email").Value;
+
+                var user = await _userManager.FindByEmailAsync(jti);
+                var userinfo = _context.UserInfos.First(el => el.User == user);
+                var data = _context.UserInfos.Where(el => el.Username.Contains(str)&&el.Username!=userinfo.Username).Select(el => new FriendDto()
+                {
+                    Alias = el.Alias,
+                    Birth = el.Birth,
+                    Image = el.Image,
+                    Username = el.User.UserName
+                }).ToList();
+
+                var result = new ResultCollectionDto<FriendDto>()
+                {
+                    IsSuccess = true,
+                    Data = data,
+                    Message = "success"
+                };
+                return result;
+            }
+            catch (Exception ex)
             {
                 return new ResultDto()
                 {

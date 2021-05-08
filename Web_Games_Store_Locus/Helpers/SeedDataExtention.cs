@@ -71,8 +71,6 @@ namespace Web_Games_Store_Locus.Helpers
                 IsBanned = false,
                 Username = "admin@gmail.com",
                 User = admin,
-                Friends = new List<User>(),
-                LikedPosts = new List<PostUser>(),
                 Posts = new List<Post>()
             };
             var vlad = new User
@@ -91,8 +89,6 @@ namespace Web_Games_Store_Locus.Helpers
                 IsBanned = false,
                 Username = "vladdjuga@gmail.com",
                 User = vlad,
-                Friends = new List<User>(),
-                LikedPosts = new List<PostUser>(),
                 Posts = new List<Post>()
             };
             context.UserInfos.Add(adminInfo);

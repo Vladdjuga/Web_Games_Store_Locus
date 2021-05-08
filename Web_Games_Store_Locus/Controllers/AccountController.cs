@@ -61,8 +61,6 @@ namespace Web_Games_Store_Locus.Controllers
                 Address = "",
                 Alias = model.Alias,
                 Image = model.Image,
-                Friends = new List<User>(),
-                LikedPosts=new List<PostUser>(),
                 Posts=new List<Post>()
             };
             user.UserInfo = ui;

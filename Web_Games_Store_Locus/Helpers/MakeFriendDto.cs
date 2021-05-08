@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,12 +12,12 @@ namespace Web_Games_Store_Locus.Helpers
 {
     public class MakeFriendDto
     {
-        public static FriendDto Make(User user,ApplicationContext _context)
+        public static FriendDto Make(string user, DbSet<UserInfo> infos)
         {
-            var userinfo = _context.UserInfos.First(el => el.User == user);
+            var userinfo = infos.First(el => el.Username == user);
             var result = new FriendDto();
             result.Alias = userinfo.Alias;
-            result.Username = user.UserName;
+            result.Username = userinfo.Username;
             result.Image = userinfo.Image;
             result.Birth = userinfo.Birth;
             return result;
