@@ -64,7 +64,7 @@ namespace Web_Games_Store_Locus.Helpers
             resultAdmin = userManager.AddToRoleAsync(admin, "Admin").Result;
             var adminInfo = new UserInfo()
             {
-                Image = env.WebRootPath + "/Images/UserIcons/default-user-image.png",
+                Image = "default-user-image.png",
                 Address = "",
                 Alias = "admin",
                 Birth = DateTime.Today,
@@ -82,7 +82,7 @@ namespace Web_Games_Store_Locus.Helpers
             resultVlad = userManager.AddToRoleAsync(vlad, "User").Result;
             var vladInfo = new UserInfo()
             {
-                Image = env.WebRootPath + "/Images/UserIcons/default-user-image.png",
+                Image = "default-user-image.png",
                 Address = "",
                 Alias = "vlad",
                 Birth = DateTime.Today,
