@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Web_Games_Store_Locus.Hub;
 using Web_Games_Store_Locus.Models;
 using Web_Games_Store_Locus.Models.Entities;
 using Web_Games_Store_Locus.Services.Implementation;
@@ -49,6 +50,26 @@ namespace Web_Games_Store_Locus
                 options.Password.RequireNonAlphanumeric = false;
                 options.Password.RequireUppercase = true;
             });
+            services.AddSignalR();
+
+            services
+            .AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    );
+
+                options.AddPolicy("signalr",
+                    builder => builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+
+                    .AllowCredentials()
+                    .SetIsOriginAllowed(hostName => true));
+            });
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -79,7 +100,12 @@ namespace Web_Games_Store_Locus
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            app.UseCors((res) => res.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials());
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -94,6 +120,11 @@ namespace Web_Games_Store_Locus
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapHub<BroadcastHub>("/chat");
+            });
 
             app.UseEndpoints(endpoints =>
             {

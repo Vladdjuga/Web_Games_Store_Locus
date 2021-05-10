@@ -10,8 +10,8 @@ using Web_Games_Store_Locus.Models;
 namespace Web_Games_Store_Locus.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210509132711_messages")]
-    partial class messages
+    [Migration("20210510115849_dajfjiad")]
+    partial class dajfjiad
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -243,6 +243,9 @@ namespace Web_Games_Store_Locus.Migrations
 
                     b.Property<int?>("ChatId")
                         .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("File")
                         .HasColumnType("nvarchar(max)");

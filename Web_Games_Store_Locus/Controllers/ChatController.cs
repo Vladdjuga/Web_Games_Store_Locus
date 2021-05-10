@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Web_Games_Store_Locus.Hub;
+using Web_Games_Store_Locus.Hub.Interface;
 using Web_Games_Store_Locus.Models;
 using Web_Games_Store_Locus.Models.Dto;
 using Web_Games_Store_Locus.Models.Entities;
@@ -19,15 +22,19 @@ namespace Web_Games_Store_Locus.Controllers
     {
         private readonly UserManager<User> _userManager;
         private readonly ApplicationContext _context;
+        private readonly IHubContext<BroadcastHub, IHubClient> _hubContext;
+
         public ChatController(UserManager<User> userManager,
-            ApplicationContext context)
+            ApplicationContext context,
+            IHubContext<BroadcastHub, IHubClient> hubContext)
         {
             _userManager = userManager;
             _context = context;
+            _hubContext = hubContext;
         }
 
         [HttpGet("chats/{token}")]
-        public async Task<ResultDto> GetChats([FromRoute] string token)
+        public async Task<ActionResult<ResultDto>> GetChats([FromRoute] string token)
         {
             try
             {
@@ -85,6 +92,7 @@ namespace Web_Games_Store_Locus.Controllers
                         } }).OrderBy(el=>el.Date).ToList()
                     };
                     list_of_chats.Add(chat);
+                    //await _hubContext.Clients.All.BroadcastMessage();
                 }
                 return new ResultCollectionDto<ChatDto>()
                 {
@@ -103,7 +111,7 @@ namespace Web_Games_Store_Locus.Controllers
             }
         }
         [HttpGet("add-chat/{token}&{friend}")]
-        public async Task<ResultDto> AddChat([FromRoute]string token, [FromRoute]string friend)
+        public async Task<ActionResult<ResultDto>> AddChat([FromRoute]string token, [FromRoute]string friend)
         {
             try
             {
@@ -131,6 +139,7 @@ namespace Web_Games_Store_Locus.Controllers
                 };
                 _context.Chats.Add(chat);
                 _context.SaveChanges();
+                await _hubContext.Clients.All.BroadcastMessage();
                 return new ResultDto()
                 {
                     IsSuccess = true,
@@ -147,7 +156,7 @@ namespace Web_Games_Store_Locus.Controllers
             }
         }
         [HttpPost("add-message/{token}&{id}")]
-        public async Task<ResultDto> AddMessage([FromRoute]string token, [FromRoute]string id,[FromBody]MessageDto model)
+        public async Task<ActionResult<ResultDto>> AddMessage([FromRoute]string token, [FromRoute]string id,[FromBody]MessageDto model)
         {
             try
             {
@@ -171,6 +180,7 @@ namespace Web_Games_Store_Locus.Controllers
                 };
                 _context.Messages.Add(message);
                 _context.SaveChanges();
+                await _hubContext.Clients.All.BroadcastMessage();
                 return new ResultDto()
                 {
                     IsSuccess = true,

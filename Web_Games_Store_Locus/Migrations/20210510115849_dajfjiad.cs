@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Web_Games_Store_Locus.Migrations
 {
-    public partial class init : Migration
+    public partial class dajfjiad : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -272,7 +272,9 @@ namespace Web_Games_Store_Locus.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     File = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ChatId = table.Column<int>(type: "int", nullable: true)
+                    Date = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ChatId = table.Column<int>(type: "int", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -281,6 +283,12 @@ namespace Web_Games_Store_Locus.Migrations
                         name: "FK_Messages_Chats_ChatId",
                         column: x => x.ChatId,
                         principalTable: "Chats",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Messages_UserInfos_UserId",
+                        column: x => x.UserId,
+                        principalTable: "UserInfos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -374,6 +382,11 @@ namespace Web_Games_Store_Locus.Migrations
                 name: "IX_Messages_ChatId",
                 table: "Messages",
                 column: "ChatId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Messages_UserId",
+                table: "Messages",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Posts_UserId",
