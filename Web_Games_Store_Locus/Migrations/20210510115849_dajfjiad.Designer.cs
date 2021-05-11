@@ -10,8 +10,8 @@ using Web_Games_Store_Locus.Models;
 namespace Web_Games_Store_Locus.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20210427131436_sss")]
-    partial class sss
+    [Migration("20210510115849_dajfjiad")]
+    partial class dajfjiad
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,6 +182,115 @@ namespace Web_Games_Store_Locus.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Chat", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("User1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Chats");
+                });
+
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("User1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Friends");
+                });
+
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Invite", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("User1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Invites");
+                });
+
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Message", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int?>("ChatId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("File")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChatId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Post", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Text")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Posts");
+                });
+
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -205,7 +314,7 @@ namespace Web_Games_Store_Locus.Migrations
 
                     b.HasIndex("CategoryId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Tag", b =>
@@ -271,9 +380,6 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserInfoId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -287,8 +393,6 @@ namespace Web_Games_Store_Locus.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("UserInfoId1");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -387,20 +491,37 @@ namespace Web_Games_Store_Locus.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Message", b =>
+                {
+                    b.HasOne("Web_Games_Store_Locus.Models.Entities.Chat", "Chat")
+                        .WithMany("Messages")
+                        .HasForeignKey("ChatId");
+
+                    b.HasOne("Web_Games_Store_Locus.Models.Entities.UserInfo", "User")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Chat");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Post", b =>
+                {
+                    b.HasOne("Web_Games_Store_Locus.Models.Entities.UserInfo", "User")
+                        .WithMany("Posts")
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Product", b =>
                 {
                     b.HasOne("Web_Games_Store_Locus.Models.Entities.Category", "Category")
-                        .WithMany("Products")
+                        .WithMany()
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.User", b =>
-                {
-                    b.HasOne("Web_Games_Store_Locus.Models.Entities.UserInfo", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("UserInfoId1");
                 });
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.UserInfo", b =>
@@ -414,9 +535,9 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Category", b =>
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Chat", b =>
                 {
-                    b.Navigation("Products");
+                    b.Navigation("Messages");
                 });
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.User", b =>
@@ -426,7 +547,9 @@ namespace Web_Games_Store_Locus.Migrations
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.UserInfo", b =>
                 {
-                    b.Navigation("Friends");
+                    b.Navigation("Messages");
+
+                    b.Navigation("Posts");
                 });
 #pragma warning restore 612, 618
         }

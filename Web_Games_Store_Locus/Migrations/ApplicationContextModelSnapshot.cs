@@ -198,6 +198,24 @@ namespace Web_Games_Store_Locus.Migrations
                     b.ToTable("Chats");
                 });
 
+            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Friend", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("User1")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("User2")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Friends");
+                });
+
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Invite", b =>
                 {
                     b.Property<int>("Id")
@@ -224,23 +242,36 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Property<int?>("ChatId")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("File")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Post", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Image")
                         .HasColumnType("nvarchar(max)");
@@ -256,19 +287,6 @@ namespace Web_Games_Store_Locus.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Posts");
-                });
-
-            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.PostUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsLiked")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("PostUser");
                 });
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Product", b =>
@@ -360,9 +378,6 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<string>("UserInfoId1")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -376,8 +391,6 @@ namespace Web_Games_Store_Locus.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex")
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
-
-                    b.HasIndex("UserInfoId1");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -482,7 +495,13 @@ namespace Web_Games_Store_Locus.Migrations
                         .WithMany("Messages")
                         .HasForeignKey("ChatId");
 
+                    b.HasOne("Web_Games_Store_Locus.Models.Entities.UserInfo", "User")
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Chat");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Post", b =>
@@ -494,25 +513,6 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.PostUser", b =>
-                {
-                    b.HasOne("Web_Games_Store_Locus.Models.Entities.Post", "Post")
-                        .WithMany("Likes")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Web_Games_Store_Locus.Models.Entities.UserInfo", "User")
-                        .WithMany("LikedPosts")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Post");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Product", b =>
                 {
                     b.HasOne("Web_Games_Store_Locus.Models.Entities.Category", "Category")
@@ -520,13 +520,6 @@ namespace Web_Games_Store_Locus.Migrations
                         .HasForeignKey("CategoryId");
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.User", b =>
-                {
-                    b.HasOne("Web_Games_Store_Locus.Models.Entities.UserInfo", null)
-                        .WithMany("Friends")
-                        .HasForeignKey("UserInfoId1");
                 });
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.UserInfo", b =>
@@ -545,11 +538,6 @@ namespace Web_Games_Store_Locus.Migrations
                     b.Navigation("Messages");
                 });
 
-            modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.Post", b =>
-                {
-                    b.Navigation("Likes");
-                });
-
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.User", b =>
                 {
                     b.Navigation("UserInfo");
@@ -557,9 +545,7 @@ namespace Web_Games_Store_Locus.Migrations
 
             modelBuilder.Entity("Web_Games_Store_Locus.Models.Entities.UserInfo", b =>
                 {
-                    b.Navigation("Friends");
-
-                    b.Navigation("LikedPosts");
+                    b.Navigation("Messages");
 
                     b.Navigation("Posts");
                 });

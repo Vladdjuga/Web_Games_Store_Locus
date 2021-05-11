@@ -58,16 +58,20 @@ namespace Web_Games_Store_Locus.Controllers
                 Birth = model.Birth,
                 Username = model.Username,
                 IsBanned = false,
-                Address="",
-                Alias="",
-                Image= _environment.WebRootPath+"/Images/UserIcons/defailt-user-image.png"
+                Address = "",
+                Alias = model.Alias,
+                Image = model.Image,
+                Posts=new List<Post>()
             };
+            user.UserInfo = ui;
             await _context.UserInfos.AddAsync(ui);
+            ui.User = user;
             await _context.SaveChangesAsync();
 
-            return new ResultDto
+            return new ResultLoginDto
             {
-                IsSuccess = true
+                IsSuccess = true,
+                Token= user.Id
             };
 
         }
@@ -124,7 +128,7 @@ namespace Web_Games_Store_Locus.Controllers
             };
         }
         [HttpPost("uploadPhoto/{id}")]
-        public ResultDto UploadImage([FromRoute] string id, [FromForm(Name = "file")] IFormFile uploadedImage)
+        public async Task<ResultDto> UploadImageAsync([FromRoute] string id, [FromForm(Name = "file")] IFormFile uploadedImage)
         {
             string filename = Guid.NewGuid().ToString() + ".jpg";
             string path = _environment.WebRootPath + @"\Images\UsersIcons";
@@ -139,10 +143,11 @@ namespace Web_Games_Store_Locus.Controllers
                 if (saveImage != null)
                 {
                     saveImage.Save(path, ImageFormat.Jpeg);
-                    var user = _context.UserInfos.Find(id);
-                    if (user.Image != null && user.Image != "default-user-image.png")
+                    var user = await _userManager.FindByIdAsync(id);
+                    var userinfo = _context.UserInfos.Find(user.Id);
+                    if (userinfo.Image != null && userinfo.Image != "default-user-image.png")
                     {
-                        System.IO.File.Delete(path + user.Image);
+                        System.IO.File.Delete(path + userinfo.Image);
                     }
                     _context.UserInfos.Find(id).Image = filename;
                     _context.SaveChanges();

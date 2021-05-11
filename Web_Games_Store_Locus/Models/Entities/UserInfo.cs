@@ -15,8 +15,7 @@ namespace Web_Games_Store_Locus.Models.Entities
         public string Image { get; set; }
         public bool IsBanned { get; set; }
         public User User { get; set; }
-        public ICollection<User> Friends { get; set; }
         public ICollection<Post> Posts { get; set; }
-        public ICollection<PostUser> LikedPosts { get; set; }
+        public ICollection<Message> Messages { get; set; }
     }
 }

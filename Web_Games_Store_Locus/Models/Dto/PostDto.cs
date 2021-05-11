@@ -9,9 +9,10 @@ namespace Web_Games_Store_Locus.Models.Dto
 {
     public class PostDto
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string Text { get; set; }
         public string Image { get; set; }
+        public DateTime Date { get; set; }
         public ProfileDto User { get; set; }
     }
 }
