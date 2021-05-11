@@ -212,6 +212,52 @@ namespace Web_Games_Store_Locus.Controllers
                 };
             }
         }
+        [HttpGet("friendsusername/{username}")]
+        public async Task<ResultDto> GetFriendsUsername([FromRoute] string username)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(username);
+                var userinfo = _context.UserInfos.First(el => el.User == user);
+                var friends_table = _context.Friends.Where(el => el.User1 == userinfo.Username || el.User2 == userinfo.Username).ToList();
+                var friends = new List<FriendDto>();
+                foreach (var item in friends_table)
+                {
+                    var f1 = new UserInfo();
+                    if (item.User1 == userinfo.Username)
+                    {
+                        f1 = _context.UserInfos.First(el => el.Username == item.User2);
+                    }
+                    else
+                    {
+                        f1 = _context.UserInfos.First(el => el.Username == item.User1);
+                    }
+
+                    friends.Add(new FriendDto()
+                    {
+                        Alias = f1.Alias,
+                        Birth = f1.Birth,
+                        Image = f1.Image,
+                        Username = f1.Username
+                    });
+                }
+                var result = new ResultCollectionDto<FriendDto>()
+                {
+                    IsSuccess = true,
+                    Data = friends,
+                    Message = "success"
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new ResultDto()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
         [HttpGet("find-friends/{token}&{str}")]
         public async Task<ResultDto> GetStringFriends([FromRoute]string token,[FromRoute] string str)
         {

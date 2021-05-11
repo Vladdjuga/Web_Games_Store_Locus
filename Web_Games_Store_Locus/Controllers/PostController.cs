@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Web_Games_Store_Locus.Helpers;
 using Web_Games_Store_Locus.Models;
 using Web_Games_Store_Locus.Models.Dto;
@@ -70,6 +71,109 @@ namespace Web_Games_Store_Locus.Controllers
                         Email = user.Email,
                         Image = userinfo.Image,
                         Username = userinfo.Username
+                    }
+                }).ToList();
+                var res = new ResultCollectionDto<PostDto>()
+                {
+                    IsSuccess = true,
+                    Message = "200",
+                    Data = selected,
+                };
+                return res;
+            }
+            catch (Exception ex)
+            {
+                var err = new ResultDto()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+                return err;
+            }
+        }
+        [HttpGet("getfriendsposts/{username}")]
+        public async Task<ResultDto> GetFriendsPosts([FromRoute] string username)
+        {
+            try
+            {
+                var user = await _userManager.FindByNameAsync(username);
+                var userinfo = _context.UserInfos.First(el => el.User == user);
+
+                var selected = _context.Posts.Where(el => el.User == userinfo).Select(el => new PostDto()
+                {
+                    Id = el.Id,
+                    Text = el.Text,
+                    Date = el.Date,
+                    Image = el.Image,
+                    User = new ProfileDto()
+                    {
+                        Alias = userinfo.Alias,
+                        Birth = userinfo.Birth,
+                        Email = user.Email,
+                        Image = userinfo.Image,
+                        Username = userinfo.Username
+                    }
+                }).ToList();
+                var res = new ResultCollectionDto<PostDto>()
+                {
+                    IsSuccess = true,
+                    Message = "200",
+                    Data = selected,
+                };
+                return res;
+            }
+            catch (Exception ex)
+            {
+                var err = new ResultDto()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+                return err;
+            }
+        }
+        [HttpGet("getnewestposts/{token}")]
+        public async Task<ResultDto> GetNewestPosts([FromRoute] string token)
+        {
+            try
+            {
+                var stream = token;
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(stream);
+                var tokenS = jsonToken as JwtSecurityToken;
+                var jti = tokenS.Claims.First(claim => claim.Type == "email").Value;
+
+                var user = await _userManager.FindByEmailAsync(jti);
+                var userinfo = _context.UserInfos.First(el => el.User == user);
+                var friends = _context.Friends.Where(el => el.User1 == userinfo.Username || el.User2 == userinfo.Username).ToList();
+                var posts = new List<Post>();
+                foreach (var item in friends)
+                {
+                    var f2 = new UserInfo();
+                    if (item.User1 == userinfo.Username)
+                    {
+                        f2 = _context.UserInfos.Include(el=>el.Posts).Include(el=>el.User).First(el => el.Username == item.User2);
+                    }
+                    else
+                    {
+                        f2 = _context.UserInfos.Include(el => el.Posts).Include(el => el.User).First(el => el.Username == item.User1);
+                    }
+                    posts.AddRange(f2.Posts);
+                }
+
+                var selected = posts.OrderByDescending(el=>el.Date).Select(el => new PostDto()
+                {
+                    Id = el.Id,
+                    Text = el.Text,
+                    Date = el.Date,
+                    Image = el.Image,
+                    User = new ProfileDto()
+                    {
+                        Alias = el.User.Alias,
+                        Birth = el.User.Birth,
+                        Email = el.User.User.Email,
+                        Image = el.User.Image,
+                        Username = el.User.Username
                     }
                 }).ToList();
                 var res = new ResultCollectionDto<PostDto>()

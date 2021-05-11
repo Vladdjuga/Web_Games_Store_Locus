@@ -127,6 +127,29 @@ namespace Web_Games_Store_Locus.Controllers
                 }
             };
         }
+        [HttpGet("profile_username/{username}")]
+        public async Task<ResultCollectionDto<ProfileDto>> ProfileByUsername([FromRoute] string username)
+        {
+            var user = await _userManager.FindByNameAsync(username);
+            var userInfo = _context.UserInfos.Find(user.Id);
+            var profile = new ProfileDto()
+            {
+                Alias = userInfo.Alias,
+                Birth = userInfo.Birth,
+                Email = user.Email,
+                Image = userInfo.Image,
+                Username = userInfo.Username
+            };
+            return new ResultCollectionDto<ProfileDto>()
+            {
+                IsSuccess = true,
+                Message = $"{username} users profile returned",
+                Data = new List<ProfileDto>()
+                {
+                    profile
+                }
+            };
+        }
         [HttpPost("uploadPhoto/{id}")]
         public async Task<ResultDto> UploadImageAsync([FromRoute] string id, [FromForm(Name = "file")] IFormFile uploadedImage)
         {
