@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -61,7 +62,7 @@ namespace Web_Games_Store_Locus.Controllers
                 Address = "",
                 Alias = model.Alias,
                 Image = model.Image,
-                Posts=new List<Post>()
+                Posts = new List<Post>()
             };
             user.UserInfo = ui;
             await _context.UserInfos.AddAsync(ui);
@@ -71,7 +72,75 @@ namespace Web_Games_Store_Locus.Controllers
             return new ResultLoginDto
             {
                 IsSuccess = true,
-                Token= user.Id
+                Token = user.Id
+            };
+
+        }
+        [HttpPost("edit/{token}")]
+        public async Task<ResultDto> EditProfile([FromBody] RegisterDto model, [FromRoute] string token)
+        {
+            var stream = token;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+            var jti = tokenS.Claims.First(claim => claim.Type == "email").Value;
+
+            var user = await _userManager.FindByEmailAsync(jti);
+            var userInfo = _context.UserInfos.Find(user.Id);
+            if (_context.UserInfos.Any(el => el.Username == model.Username && el.Username != userInfo.Username)) {
+                return new ResultDto
+                {
+                    IsSuccess = false,
+                    Message = "One profile have same username!"
+                };
+            }
+            if (_context.UserInfos.Include(el => el.User).Any(el => el.User.Email == model.Email && el.User.Email != user.Email)) {
+                return new ResultDto
+                {
+                    IsSuccess = false,
+                    Message = "One profile have same email!"
+                };
+            }
+            var friends = await _context.Friends.Where(el => el.User1 == userInfo.Username || el.User2 == userInfo.Username).ToListAsync();
+            foreach (var item in friends)
+            {
+                if (item.User1 == userInfo.Username)
+                {
+                    _context.Friends.Find(item.Id).User1 = model.Username;
+                }
+                else
+                {
+                    _context.Friends.Find(item.Id).User2 = model.Username;
+                }
+
+            }
+            var chats = await _context.Chats.Where(el => el.User1 == userInfo.Username || el.User2 == userInfo.Username).ToListAsync();
+            foreach (var item in chats)
+            {
+                if (item.User1 == userInfo.Username)
+                {
+                    _context.Chats.Find(item.Id).User1 = model.Username;
+                }
+                else
+                {
+                    _context.Chats.Find(item.Id).User2 = model.Username;
+                }
+
+            }
+
+            userInfo.Username = model.Username;
+            userInfo.Alias = model.Alias;
+            userInfo.Image = model.Image;
+
+            await _userManager.SetEmailAsync(user, model.Email);
+            await _userManager.SetUserNameAsync(user, model.Username);
+            await _context.SaveChangesAsync();
+
+            return new ResultLoginDto
+            {
+                IsSuccess = true,
+                Message=user.Id,
+                Token = _jwtTokenService.CreateToken(user)
             };
 
         }
