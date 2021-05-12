@@ -289,3 +289,4 @@ C:\Users\ernendo.itstep\Documents\GitHub\Web_Games_Store_Locus\Web_Games_Store_L
 C:\Users\ernendo.itstep\Documents\GitHub\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.pdb
 C:\Users\ernendo.itstep\Documents\GitHub\Web_Games_Store_Locus\Web_Games_Store_Locus\obj\Debug\netcoreapp3.1\Web_Games_Store_Locus.genruntimeconfig.cache
 C:\Users\ernendo.itstep\Documents\GitHub\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\System.Net.WebSockets.WebSocketProtocol.dll
+C:\Users\Vlad\source\repos\Web_Games_Store_Locus\Web_Games_Store_Locus\bin\Debug\netcoreapp3.1\System.Net.WebSockets.WebSocketProtocol.dll

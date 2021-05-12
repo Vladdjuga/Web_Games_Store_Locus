@@ -16,7 +16,7 @@ namespace Web_Games_Store_Locus.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize]
+    [Authorize(Roles = "User,Admin")]
     public class FriendController : ControllerBase
     {
         private readonly UserManager<User> _userManager;

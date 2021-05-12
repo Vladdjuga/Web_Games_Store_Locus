@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -25,6 +26,7 @@ namespace Web_Games_Store_Locus.Controllers
     public class AccountController : ControllerBase
     {
         private ApplicationContext _context;
+        private RoleManager<IdentityRole> _roleManager;
         private UserManager<User> _userManager;
         private IWebHostEnvironment _environment;
         private SignInManager<User> _signInManager;
@@ -34,49 +36,81 @@ namespace Web_Games_Store_Locus.Controllers
             ApplicationContext context,
             IWebHostEnvironment environment,
             SignInManager<User> signInManager,
-            IJwtTokenService jwtTokenService)
+            IJwtTokenService jwtTokenService,
+            RoleManager<IdentityRole> roleManager
+            )
         {
             _userManager = userManager;
             _context = context;
             _environment = environment;
             _jwtTokenService = jwtTokenService;
             _signInManager = signInManager;
+            _roleManager = roleManager;
         }
 
 
         [HttpPost("register")]
         public async Task<ResultDto> Register([FromBody] RegisterDto model)
         {
-            User user = new User()
+            try
             {
-                Email = model.Email,
-                UserName = model.Username
-            };
-            await _userManager.CreateAsync(user, model.Password);
-            UserInfo ui = new UserInfo()
-            {
-                Id = user.Id,
-                Birth = model.Birth,
-                Username = model.Username,
-                IsBanned = false,
-                Address = "",
-                Alias = model.Alias,
-                Image = model.Image,
-                Posts = new List<Post>()
-            };
-            user.UserInfo = ui;
-            await _context.UserInfos.AddAsync(ui);
-            ui.User = user;
-            await _context.SaveChangesAsync();
+                if (_context.UserInfos.Any(el => el.Username == model.Username))
+                {
+                    return new ResultDto
+                    {
+                        IsSuccess = false,
+                        Message = "One profile have same username!"
+                    };
+                }
+                if (_context.UserInfos.Include(el => el.User).Any(el => el.User.Email == model.Email))
+                {
+                    return new ResultDto
+                    {
+                        IsSuccess = false,
+                        Message = "One profile have same email!"
+                    };
+                }
+                User user = new User()
+                {
+                    Email = model.Email,
+                    UserName = model.Username
+                };
+                await _userManager.CreateAsync(user, model.Password);
+                UserInfo ui = new UserInfo()
+                {
+                    Id = user.Id,
+                    Birth = model.Birth,
+                    Username = model.Username,
+                    IsBanned = false,
+                    Address = "",
+                    Alias = model.Alias,
+                    Image = model.Image,
+                    Posts = new List<Post>()
+                };
+                user.UserInfo = ui;
+                await _context.UserInfos.AddAsync(ui);
+                ui.User = user;
+                await _context.SaveChangesAsync();
+                _ = _userManager.AddToRoleAsync(user, "User").Result;
 
-            return new ResultLoginDto
+                return new ResultLoginDto
+                {
+                    IsSuccess = true,
+                    Token = user.Id
+                };
+            }
+            catch(Exception ex)
             {
-                IsSuccess = true,
-                Token = user.Id
-            };
+                return new ResultDto()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
 
         }
         [HttpPost("edit/{token}")]
+        [Authorize]
         public async Task<ResultDto> EditProfile([FromBody] RegisterDto model, [FromRoute] string token)
         {
             var stream = token;
@@ -168,33 +202,58 @@ namespace Web_Games_Store_Locus.Controllers
 
         }
         [HttpGet("profile/{token}")]
-        public async Task<ResultCollectionDto<ProfileDto>> Profile([FromRoute] string token)
+        [Authorize]
+        public async Task<ResultDto> Profile([FromRoute] string token)
         {
-            var stream = token;
-            var handler = new JwtSecurityTokenHandler();
-            var jsonToken = handler.ReadToken(stream);
-            var tokenS = jsonToken as JwtSecurityToken;
-            var jti = tokenS.Claims.First(claim => claim.Type == "email").Value;
+            try
+            {
+                //_ = _roleManager.CreateAsync(new IdentityRole() { Name = "Ban" }).Result;
+                var stream = token;
+                var handler = new JwtSecurityTokenHandler();
+                var jsonToken = handler.ReadToken(stream);
+                var tokenS = jsonToken as JwtSecurityToken;
+                var jti = tokenS.Claims.First(claim => claim.Type == "email").Value;
 
-            var user = await _userManager.FindByEmailAsync(jti);
-            var userInfo=_context.UserInfos.Find(user.Id);
-            var profile = new ProfileDto()
-            {
-                Alias = userInfo.Alias,
-                Birth = userInfo.Birth,
-                Email = user.Email,
-                Image = userInfo.Image,
-                Username = userInfo.Username
-            };
-            return new ResultCollectionDto<ProfileDto>()
-            {
-                IsSuccess = true,
-                Message = $"{token} users profile returned",
-                Data = new List<ProfileDto>()
+                var user = await _userManager.FindByEmailAsync(jti);
+                if (!await _userManager.IsInRoleAsync(user, "User"))
+                {
+                    _ = _userManager.AddToRoleAsync(user, "User").Result;
+                }
+                var userInfo = _context.UserInfos.Find(user.Id);
+                var profile = new ProfileDto()
+                {
+                    Alias = userInfo.Alias,
+                    Birth = userInfo.Birth,
+                    Email = user.Email,
+                    Image = userInfo.Image,
+                    Username = userInfo.Username
+                };
+                if (await _userManager.IsInRoleAsync(user, "Admin"))
+                {
+                    profile.Role = "Admin";
+                }
+                else if (await _userManager.IsInRoleAsync(user, "User"))
+                {
+                    profile.Role = "User";
+                }
+                return new ResultCollectionDto<ProfileDto>()
+                {
+                    IsSuccess = true,
+                    Message = $"{token} users profile returned",
+                    Data = new List<ProfileDto>()
                 {
                     profile
                 }
-            };
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ResultDto()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
         }
         [HttpGet("profile_username/{username}")]
         public async Task<ResultCollectionDto<ProfileDto>> ProfileByUsername([FromRoute] string username)
@@ -209,6 +268,14 @@ namespace Web_Games_Store_Locus.Controllers
                 Image = userInfo.Image,
                 Username = userInfo.Username
             };
+            if (await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                profile.Role = "Admin";
+            }
+            else if (await _userManager.IsInRoleAsync(user, "User"))
+            {
+                profile.Role = "User";
+            }
             return new ResultCollectionDto<ProfileDto>()
             {
                 IsSuccess = true,
