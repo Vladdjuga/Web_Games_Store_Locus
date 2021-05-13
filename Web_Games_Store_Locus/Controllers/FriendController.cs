@@ -296,6 +296,37 @@ namespace Web_Games_Store_Locus.Controllers
                 };
             }
         }
+        [HttpGet("all-friends")]
+        [Authorize(Roles = "Admin")]
+        public ResultDto GetAllFriends()
+        {
+            try
+            {
+                var data = _context.UserInfos.Select(el => new FriendDto()
+                {
+                    Alias = el.Alias,
+                    Birth = el.Birth,
+                    Image = el.Image,
+                    Username = el.User.UserName
+                }).ToList();
+
+                var result = new ResultCollectionDto<FriendDto>()
+                {
+                    IsSuccess = true,
+                    Data = data,
+                    Message = "success"
+                };
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new ResultDto()
+                {
+                    IsSuccess = false,
+                    Message = ex.Message
+                };
+            }
+        }
 
 
     }
