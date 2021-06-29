@@ -111,7 +111,7 @@ namespace Web_Games_Store_Locus
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
